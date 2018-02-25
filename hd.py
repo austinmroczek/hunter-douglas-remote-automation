@@ -2,7 +2,8 @@ from gpiozero import LED
 from time import sleep
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
-
+isTravelling = False  # flag to ensure not triggering motion while already in motion
+isUp = False
 Button1 = LED(4, active_high=False)
 ButtonDown = LED(6, active_high=False)
 ButtonUp = LED(5, active_high=False)
@@ -13,6 +14,15 @@ def ButtonSetup():
   ButtonUp.off()
 
 def Group1Down(): # tell Group1 to go down using Radio Control
+
+  if isUp == False: # it's already down, so do nothing
+      return
+  
+  if isTravelling == True:
+      # some sort of error message?
+      return
+
+  isTravelling = True
   # activate group 1
   Button1.on()
   sleep(1)
@@ -23,8 +33,19 @@ def Group1Down(): # tell Group1 to go down using Radio Control
   ButtonDown.off()
   # wait a long time so the motion can finish
   sleep(10)
+  isTravelling = False
+  isUp = False
   
 def Group1Up(): # tell Group1 to go Up using Radio Control
+
+  if isUp == True: # it's already up, so do nothing
+      return
+  
+  if isTravelling == True:
+      # some sort of error message?
+      return
+
+  isTravelling = True 
   # activate group 1
   Button1.on()
   sleep(1)
@@ -35,6 +56,8 @@ def Group1Up(): # tell Group1 to go Up using Radio Control
   ButtonUp.off()
   # wait a long time so the motion can finish
   sleep(10)
+  isTravelling = False
+  isUp = True
 
 
 # HTTPRequestHandler class
@@ -49,11 +72,13 @@ class myHTTPServer_RequestHandler(BaseHTTPRequestHandler):
         self.send_header('Content-type','text/html')
         self.end_headers()
  
-        if self.path=="up":
+        
+ 
+        if self.path=="/up":
             message = "up"
             self.wfile.write(bytes(message, "utf8"))
             Group1Up()
-        elif self.path=="down":
+        elif self.path=="/down":
             message = "down"
             self.wfile.write(bytes(message, "utf8"))
             Group1Down()
