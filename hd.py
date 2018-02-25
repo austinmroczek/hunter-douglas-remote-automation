@@ -28,20 +28,20 @@ class HD():
 
         self.isTraveling = True
         # activate group 1
-        Button1.on()
+        self.Button1.on()
         sleep(1)
-        Button1.off()
+        self.Button1.off()
         sleep(1)
-        ButtonDown.on()
+        self.ButtonDown.on()
         sleep(2)
-        ButtonDown.off()
+        self.ButtonDown.off()
         # wait a long time so the motion can finish
         sleep(10)
         self.isTraveling = False
         self.isUp = False
         return "Request accepted.  Blinds moved down."
   
-    def Group1Up(): # tell Group1 to go Up using Radio Control
+    def Group1Up(self): # tell Group1 to go Up using Radio Control
 
         if self.isUp == True: 
             return "Blinds are already up.  Doing nothing."
@@ -51,13 +51,13 @@ class HD():
 
         self.isTraveling = True 
         # activate group 1
-        Button1.on()
+        self.Button1.on()
         sleep(1)
-        Button1.off()
+        self.Button1.off()
         sleep(1)
-        ButtonUp.on()
+        self.ButtonUp.on()
         sleep(2)
-        ButtonUp.off()
+        self.ButtonUp.off()
         # wait a long time so the motion can finish
         sleep(10)
         self.isTraveling = False
