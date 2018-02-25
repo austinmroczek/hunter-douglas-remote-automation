@@ -2,65 +2,67 @@ from gpiozero import LED
 from time import sleep
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
-isTraveling = False  # flag to ensure not triggering motion while already in motion
-isUp = False
-Button1 = LED(4, active_high=False)
-ButtonDown = LED(6, active_high=False)
-ButtonUp = LED(5, active_high=False)
 
-def ButtonSetup():
-  Button1.off()
-  ButtonDown.off()
-  ButtonUp.off()
+class HD():
+    def __init__(self):
+        self.isTraveling = False  # flag to ensure not triggering motion while already in motion
+        self.isUp = False
+        self.Button1 = LED(4, active_high=False)
+        self.ButtonDown = LED(6, active_high=False)
+        self.ButtonUp = LED(5, active_high=False)
+        self.ButtonSetup()
+        
+    def ButtonSetup(self):
+        self.Button1.off()
+        self.ButtonDown.off()
+        self.ButtonUp.off()
 
-def Group1Down(): # tell Group1 to go down using Radio Control
-  # returns an appropriate message
+    def Group1Down(self): # tell Group1 to go down using Radio Control
+        # returns an appropriate message
 
-  if isUp == False: 
-      return "Blinds are already down.  Doing nothing."
+        if self.isUp == False: 
+            return "Blinds are already down.  Doing nothing."
   
-  if isTraveling == True:
-      return "Blinds are already traveling.  Cannot take request."
+        if self.isTraveling == True:
+            return "Blinds are already traveling.  Cannot take request."
 
-  isTraveling = True
-  # activate group 1
-  Button1.on()
-  sleep(1)
-  Button1.off()
-  sleep(1)
-  ButtonDown.on()
-  sleep(2)
-  ButtonDown.off()
-  # wait a long time so the motion can finish
-  sleep(10)
-  isTraveling = False
-  isUp = False
-  return "Request accepted.  Blinds moved down."
+        self.isTraveling = True
+        # activate group 1
+        Button1.on()
+        sleep(1)
+        Button1.off()
+        sleep(1)
+        ButtonDown.on()
+        sleep(2)
+        ButtonDown.off()
+        # wait a long time so the motion can finish
+        sleep(10)
+        self.isTraveling = False
+        self.isUp = False
+        return "Request accepted.  Blinds moved down."
   
+    def Group1Up(): # tell Group1 to go Up using Radio Control
+
+        if self.isUp == True: 
+            return "Blinds are already up.  Doing nothing."
   
-def Group1Up(): # tell Group1 to go Up using Radio Control
+        if self.isTraveling == True:
+            return "Blinds are already traveling.  Cannot take request."
 
-  if isUp == True: 
-      return "Blinds are already up.  Doing nothing."
-  
-  if isTraveling == True:
-      return "Blinds are already traveling.  Cannot take request."
-
-  isTraveling = True 
-  # activate group 1
-  Button1.on()
-  sleep(1)
-  Button1.off()
-  sleep(1)
-  ButtonUp.on()
-  sleep(2)
-  ButtonUp.off()
-  # wait a long time so the motion can finish
-  sleep(10)
-  isTraveling = False
-  isUp = True
-  return "Request accepted.  Blinds moved up."
-
+        self.isTraveling = True 
+        # activate group 1
+        Button1.on()
+        sleep(1)
+        Button1.off()
+        sleep(1)
+        ButtonUp.on()
+        sleep(2)
+        ButtonUp.off()
+        # wait a long time so the motion can finish
+        sleep(10)
+        self.isTraveling = False
+        self.isUp = True
+        return "Request accepted.  Blinds moved up."
 
 # HTTPRequestHandler class
 class myHTTPServer_RequestHandler(BaseHTTPRequestHandler):
@@ -75,11 +77,11 @@ class myHTTPServer_RequestHandler(BaseHTTPRequestHandler):
         self.end_headers()
  
         if self.path=="/up":
-            message = Group1Up()
+            message = myHD.Group1Up()
             self.wfile.write(bytes(message, "utf8"))
             
         elif self.path=="/down":
-            message = Group1Down()
+            message = myHD.Group1Down()
             self.wfile.write(bytes(message, "utf8"))
             
         else:
@@ -96,5 +98,5 @@ def runHTTP():
     httpd.serve_forever()
     
 
-ButtonSetup()
+myHD = HD()
 runHTTP()
