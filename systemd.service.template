@@ -1,0 +1,11 @@
+[Unit]
+Description=Hunter Douglas Remote Automation
+After=network-online.target
+
+[Service]
+Type=simple
+User=%i
+ExecStart=/usr/bin/python3 /home/pi/hunter-douglas-remote-automation/hd.py
+
+[Install]
+WantedBy=multi-user.target

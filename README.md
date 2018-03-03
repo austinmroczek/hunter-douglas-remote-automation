@@ -36,6 +36,9 @@ Add a simple HTTP server so you can control your remote from your Local Area Net
 
 The current program includes this capability.
 
+## Run at system startup ##
+Run the systemd-setup.sh script to enable the program to run automatically at system startup.  It assumes user is "pi" and runs with the permissions of that user.
+
 ## Future / To-do ##
 * Increase security
 * Better tie to Home Assistant or other home automation capabilities
