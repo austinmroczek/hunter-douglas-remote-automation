@@ -2,14 +2,18 @@ from gpiozero import LED
 from time import sleep
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
+# PIN numbering per https://gpiozero.readthedocs.io/en/stable/recipes.html
+PIN_BUTTON1 = 2
+PIN_BUTTONUP = 3
+PIN_BUTTONDOWN = 4
 
 class HD():
     def __init__(self):
         self.isTraveling = False  # flag to ensure not triggering motion while already in motion
         self.isUp = False
-        self.Button1 = LED(4, active_high=False)
-        self.ButtonDown = LED(6, active_high=False)
-        self.ButtonUp = LED(5, active_high=False)
+        self.Button1 = LED(PIN_BUTTON1, active_high=False)
+        self.ButtonDown = LED(PIN_BUTTONDOWN, active_high=False)
+        self.ButtonUp = LED(PIN_BUTTONUP, active_high=False)
         self.ButtonSetup()
         
     def ButtonSetup(self):

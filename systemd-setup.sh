@@ -19,6 +19,9 @@ fi
 sc=/bin/systemctl
 hd=hunter-douglas-remote-automation@pi
 
+# install necessary python modules
+apt install python3-gpiozero
+
 cp systemd.service.template /etc/systemd/system/hunter-douglas-remote-automation@pi.service
 systemctl --system daemon-reload
 
